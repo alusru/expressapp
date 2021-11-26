@@ -1,5 +1,5 @@
 const expressJwt = require('express-jwt');
-require('dotenv').config()
+
 
 /**
  *

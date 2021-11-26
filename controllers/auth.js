@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 
+
 /**
  *
  * @param password
@@ -47,23 +48,25 @@ const register = async (request,response) => {
 
           if(!email) return response.status(400).send('Email is required')
 
-          if(!password || password < 6) return response.status(400).send('Password is required')
+           if(password.length < 6 ) return response.status(400).send('Password is less than 6 characters')
+
+          if(!password) return response.status(400).send('Password is required')
 
           let userCheckExist = await User.findOne({email}).exec()
 
           if(userCheckExist) return response.status(400).send('Email already exists')
 
-          // encrypt password but we'll do later
+
            const encryptedHash = await  encryptPassword(password)
 
 
-          // save data
+
          const user = await new User({
              email,
              password: encryptedHash
          }).save()
          response.status(200).send(`user ${email} has been registered`)
-        console.log(user, 'save user')
+
 
         }catch (e) {
             return response.status(400).send('Not Registered')
@@ -84,7 +87,7 @@ const login = async (request,response) => {
 
         const passwordComparedWithDB = await passwordCompare(password,findUser.password)
 
-        if(!passwordComparedWithDB || !findUser) return response.status(403).send('username / password is incorrect')
+        if(!passwordComparedWithDB || !findUser) return response.status(400).send('username / password is incorrect')
 
 
         const token = jwt.sign({_id:findUser._id}, process.env.JWT_SECRET_KEY,{
@@ -97,7 +100,6 @@ const login = async (request,response) => {
             httpOnly:true
         })
 
-        //response.json(findUser)
 
         return response.json({message: "Login Successful"})
 
@@ -122,5 +124,14 @@ const getCurrentUser = async (request,response) => {
     }
 }
 
+const logout = async (request,response) => {
+    try{
+        response.clearCookie("token");
+        return response.json({message: "Logout Successfully"});
+    }catch (e) {
+        console.log(e)
+    }
+}
 
-module.exports = {register,login,getCurrentUser}
+
+module.exports = {register,login,getCurrentUser,logout}
