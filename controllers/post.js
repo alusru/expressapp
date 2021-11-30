@@ -4,9 +4,12 @@ const Post = require('../models/Post')
 const slugify = require('slugify')
 
 
-
-
-
+/**
+ *
+ * @param request
+ * @param response
+ * @returns {Promise<*>}
+ */
 const createPost = async (request,response) => {
     try{
         const postExist = await Post.findOne({

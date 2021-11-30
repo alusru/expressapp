@@ -118,8 +118,9 @@ const login = async (request,response) => {
  */
 const getCurrentUser = async (request,response) => {
     try{
+
         const currentUser = await User.findById(request.user._id).select("-password").exec()
-        //console.log(currentUser);
+
         return response.json({status: true})
     }catch (e) {
         response.status(400).send(e)
@@ -138,6 +139,7 @@ const logout = async (request,response) => {
 
 const myposts = async (request,response) => {
     try{
+        //console.log(request.user)
         const post = await Post.find({author: request.user._id}).sort({createdAt: -1}).exec()
 
         response.json(post)

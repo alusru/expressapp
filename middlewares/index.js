@@ -11,7 +11,13 @@ const User = require('../models/User');
     algorithms: ["HS256"]
 })
 
-
+/**
+ *
+ * @param request
+ * @param response
+ * @param next
+ * @returns {Promise<*>}
+ */
 const verifiedUser = async (request, response,next) => {
      try{
          const user = await User.findById(request.user._id).exec();
