@@ -1,5 +1,5 @@
 const expressJwt = require('express-jwt');
-
+const User = require('../models/User');
 
 /**
  *
@@ -11,4 +11,22 @@ const expressJwt = require('express-jwt');
     algorithms: ["HS256"]
 })
 
-module.exports = {requireSignin}
+
+const verifiedUser = async (request, response,next) => {
+     try{
+         const user = await User.findById(request.user._id).exec();
+
+         if(!user.role.includes("author")) {
+
+             return response.sendStatus(403)
+
+         }else{
+             next();
+         }
+
+     }catch (e) {
+         console.log(e)
+     }
+}
+
+module.exports = {requireSignin,verifiedUser}

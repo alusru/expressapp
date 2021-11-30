@@ -1,6 +1,8 @@
 const User = require( '../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Post = require('../models/Post')
+
 
 
 
@@ -117,7 +119,7 @@ const login = async (request,response) => {
 const getCurrentUser = async (request,response) => {
     try{
         const currentUser = await User.findById(request.user._id).select("-password").exec()
-        response.status(200).send(`${currentUser}`)
+        //console.log(currentUser);
         return response.json({status: true})
     }catch (e) {
         response.status(400).send(e)
@@ -134,4 +136,14 @@ const logout = async (request,response) => {
 }
 
 
-module.exports = {register,login,getCurrentUser,logout}
+const myposts = async (request,response) => {
+    try{
+        const post = await Post.find({author: request.user._id}).sort({createdAt: -1}).exec()
+
+        response.json(post)
+    }catch (e) {
+        console.log(e)
+    }
+}
+
+module.exports = {register,login,getCurrentUser,logout,myposts}

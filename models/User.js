@@ -17,6 +17,10 @@ const SchemaUser = new Schema({
         trim: true,
         min: 6,
         max: 65,
+    },
+    role: {
+        type: String,
+        default: "author"
     }
 
 },{timestamps: true})

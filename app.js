@@ -11,6 +11,7 @@ var csurf = require('csurf');
 var csurfProtection = csurf({ cookie: true })
 
 var usersRouter = require('./routes/users');
+var postRouter = require('./routes/post');
 
 
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/auth', usersRouter);
+app.use('/auth', postRouter);
 
 app.use(csurfProtection);
 
